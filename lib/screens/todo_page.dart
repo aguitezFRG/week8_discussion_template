@@ -133,8 +133,10 @@ class _TodoPageState extends State<TodoPage> {
         ListTile(
           title: const Text('Todo List'),
           onTap: () {
-            Navigator.pop(context);
-            Navigator.pushNamed(context, "/");
+            if(ModalRoute.of(context)!.settings.name != '/'){
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/');
+            }
           },
         ),
         ListTile(
