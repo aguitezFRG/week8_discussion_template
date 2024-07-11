@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "682248118779",
+    "project_id": "cmsc23-todo-app-fpaguitez",
+    "storage_bucket": "cmsc23-todo-app-fpaguitez.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:682248118779:android:17bbde7dc08af8903dab5e",
+        "android_client_info": {
+          "package_name": "com.example.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAT3LJbgibiDLepAhsyQba8FXUYL-dBUTQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
