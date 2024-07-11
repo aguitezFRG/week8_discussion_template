@@ -22,18 +22,25 @@ class _TodoPageState extends State<TodoPage> {
       appBar: AppBar(
         title: const Text("Todo"),
       ),
+      // necessary if using Stream
       body: StreamBuilder(
         stream: todosStream,
+        // snapshot contains the data from the stream
         builder: (context, snapshot) {
+          // error handling
           if (snapshot.hasError) {
             return Center(
               child: Text("Error encountered! ${snapshot.error}"),
             );
-          } else if (snapshot.connectionState == ConnectionState.waiting) {
+          } 
+          // loading
+          else if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
             );
-          } else if (!snapshot.hasData) {
+          } 
+          // snapshot is empty
+          else if (!snapshot.hasData) {
             return const Center(
               child: Text("No Todos Found"),
             );
@@ -43,7 +50,13 @@ class _TodoPageState extends State<TodoPage> {
             itemCount: snapshot.data?.docs.length,
             itemBuilder: ((context, index) {
               Todo todo = Todo.fromJson(
-                  snapshot.data?.docs[index].data() as Map<String, dynamic>);
+                // .docs is the document in firebase
+                // .data retrieves the fields
+                // need to get typecasted as it is nullable
+                snapshot.data?.docs[index].data() as Map<String, dynamic>);
+                
+                // .id is the id of the document
+                todo.id = snapshot.data?.docs[index].id;
               return Dismissible(
                 key: Key(todo.id.toString()),
                 onDismissed: (direction) {
