@@ -1,19 +1,29 @@
+/*
+  Created by: Claizel Coubeili Cepe
+  Date: updated April 26, 2023
+  Description: Sample todo app with Firebase 
+*/
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:week8datapersistence/firebase_options.dart';
+import 'firebase_options.dart';
+import 'screens/home_page.dart';
 import 'providers/todo_provider.dart';
-import 'screens/todo_page.dart';
+import 'providers/auth_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: ((context) => TodoListProvider())),
+        ChangeNotifierProvider(create: ((context) => UserAuthProvider()))
       ],
-      child: const MyApp(),
+      child: MyApp(),
     ),
   );
 }
@@ -28,7 +38,7 @@ class MyApp extends StatelessWidget {
       title: 'SimpleTodo',
       initialRoute: '/',
       routes: {
-        '/': (context) => const TodoPage(),
+        '/': (context) => const HomePage(),
       },
       theme: ThemeData(
         primarySwatch: Colors.blue,

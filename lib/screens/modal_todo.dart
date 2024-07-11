@@ -1,3 +1,9 @@
+/*
+  Created by: Claizel Coubeili Cepe
+  Date: updated April 26, 2023
+  Description: Sample todo app with Firebase 
+*/
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/todo_model.dart';
@@ -8,7 +14,7 @@ class TodoModal extends StatelessWidget {
   final Todo? item;
   final TextEditingController _formFieldController = TextEditingController();
 
-  TodoModal({super.key, required this.type, this.item});
+  TodoModal({super.key, required this.type, required this.item});
 
   // Method to show the title of the modal depending on the functionality
   Text _buildTitle() {
@@ -37,9 +43,8 @@ class TodoModal extends StatelessWidget {
       default:
         return TextField(
           controller: _formFieldController,
-          decoration: InputDecoration(
-            border: const OutlineInputBorder(),
-            hintText: item != null ? item!.title : '',
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
           ),
         );
     }
@@ -101,10 +106,10 @@ class TodoModal extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text("Cancel"),
           style: TextButton.styleFrom(
             textStyle: Theme.of(context).textTheme.labelLarge,
           ),
+          child: const Text("Cancel"),
         ),
       ],
     );

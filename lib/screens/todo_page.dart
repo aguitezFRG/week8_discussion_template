@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/todo_model.dart';
+import '../providers/auth_provider.dart';
 import '../providers/todo_provider.dart';
 import 'modal_todo.dart';
+import 'user_details_page.dart';
 
 class TodoPage extends StatefulWidget {
   const TodoPage({super.key});
@@ -15,32 +17,24 @@ class TodoPage extends StatefulWidget {
 class _TodoPageState extends State<TodoPage> {
   @override
   Widget build(BuildContext context) {
-    // access the list of todos in the provider
     Stream<QuerySnapshot> todosStream = context.watch<TodoListProvider>().todo;
-
     return Scaffold(
+      drawer: drawer,
       appBar: AppBar(
         title: const Text("Todo"),
       ),
-      // necessary if using Stream
       body: StreamBuilder(
         stream: todosStream,
-        // snapshot contains the data from the stream
         builder: (context, snapshot) {
-          // error handling
           if (snapshot.hasError) {
             return Center(
               child: Text("Error encountered! ${snapshot.error}"),
             );
-          } 
-          // loading
-          else if (snapshot.connectionState == ConnectionState.waiting) {
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
             );
-          } 
-          // snapshot is empty
-          else if (!snapshot.hasData) {
+          } else if (!snapshot.hasData) {
             return const Center(
               child: Text("No Todos Found"),
             );
@@ -50,13 +44,8 @@ class _TodoPageState extends State<TodoPage> {
             itemCount: snapshot.data?.docs.length,
             itemBuilder: ((context, index) {
               Todo todo = Todo.fromJson(
-                // .docs is the document in firebase
-                // .data retrieves the fields
-                // need to get typecasted as it is nullable
-                snapshot.data?.docs[index].data() as Map<String, dynamic>);
-                
-                // .id is the id of the document
-                todo.id = snapshot.data?.docs[index].id;
+                  snapshot.data?.docs[index].data() as Map<String, dynamic>);
+              todo.id = snapshot.data?.docs[index].id;
               return Dismissible(
                 key: Key(todo.id.toString()),
                 onDismissed: (direction) {
@@ -120,6 +109,7 @@ class _TodoPageState extends State<TodoPage> {
             context: context,
             builder: (BuildContext context) => TodoModal(
               type: 'Add',
+              item: null,
             ),
           );
         },
@@ -127,4 +117,32 @@ class _TodoPageState extends State<TodoPage> {
       ),
     );
   }
+
+  Drawer get drawer => Drawer(
+          child: ListView(padding: EdgeInsets.zero, children: [
+        const DrawerHeader(child: Text("Todo")),
+        ListTile(
+          title: const Text('Details'),
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const UserDetailsPage()));
+          },
+        ),
+        ListTile(
+          title: const Text('Todo List'),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.pushNamed(context, "/");
+          },
+        ),
+        ListTile(
+          title: const Text('Logout'),
+          onTap: () {
+            context.read<UserAuthProvider>().signOut();
+            Navigator.pop(context);
+          },
+        ),
+      ]));
 }
